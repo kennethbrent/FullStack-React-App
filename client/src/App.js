@@ -28,22 +28,26 @@ class App extends Component {
             .then(res => {
               if(res.status === 200){
                 Cookies.set('authenticatedUser', JSON.stringify(btoa(username)), {expires: 1})
-                this.setState({
-                  authenticatedUser: Cookies.getJSON('authenticatedUser')
-                }, ()=>{
-                  console.log(this.state)
-                })
-                res.json()
+                return res.json()
               }
             }) 
+            .then(data => {
+              const cookie = Cookies.getJSON('authenticatedUser');
+              if(cookie){
+                this.setState({
+                  authenticatedUser: cookie,
+                })
+              }
+              return data.user.firstName
+            })
             .catch(error =>{
                 console.log(error)
             })
     }
 
-    handleSignOut(){
+    handleSignOut = () =>{
       this.setState({authenticatedUser: null}, ()=>{
-        Cookies.remove('authenticatedUser', {domain: 'localhost', path: '/'})
+        Cookies.remove('authenticatedUser')
       })
     }
 
@@ -54,7 +58,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <div className="container">
-        <Header authenticatedUser={this.state.authenticatedUser} handleSignOut={this.handleSignOut}/>
+        <Header authenticatedUser={this.state.authenticatedUser} handleSignOut={this.handleSignOut} user="me"/>
           <Switch>
             <Redirect exact from='/' to='/courses'/> 
             <Route exact path='/courses' render={()=> <Courses/>}/>

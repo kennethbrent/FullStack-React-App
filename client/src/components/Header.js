@@ -11,7 +11,7 @@ const Header = (props) => {
                         <a className='signup' href="/signup">Sign up</a>
                         <a className="signin" href="/signin">Sign in</a>
                     </nav>:
-                    <UserSignOut handleSignOut={props.handleSignOut}/>
+                    <UserSignOut handleSignOut={props.handleSignOut} user={props.user}/>
                 }
                
                 {/**
