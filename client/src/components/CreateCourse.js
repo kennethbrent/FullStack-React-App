@@ -2,7 +2,9 @@ import React, {Component} from 'react'
 import { NavLink } from 'react-router-dom';
 
 class CreateCourse extends Component {
-
+    state = {
+        error: null
+    }
     handleCreateCourse = (e) =>{
         e.preventDefault()
         const encodedCredentials = btoa(`${this.props.authenticatedUser.emailAddress}:${this.props.authenticatedUser.password}`);
@@ -27,9 +29,17 @@ class CreateCourse extends Component {
                 body: JSON.stringify(courseObject) // body data type must match "Content-Type" header
             })
             .then(res => {
-                const location = res.headers.get('Location')
-                window.location.href = `${location}`
-            }) // or res.json()
+                if(!res.ok){
+                    res.text()
+                    .then(text => {throw Error(text)})
+                    .catch(err =>{
+                        this.setState({error: err.message})
+                    })
+                } else{
+                    const location = res.headers.get('Location')
+                    window.location.href = `${location}`
+                }
+            })
             .catch(error =>{
                 console.log(error)
             })
@@ -41,11 +51,10 @@ class CreateCourse extends Component {
                 <h1>Create Course</h1>
                 <div>
                     <div>
-                        <h2 className="validation--errors--label">Validatin errors</h2>
+                        <h2 className="validation--errors--label">Validation errors</h2>
                         <div className="validation-errors">
                             <ul>
-                                <li>Please provide a defaultValue for Tite</li>
-                                <li>Please provide a defaultValue for "Description"</li>
+                                    <li>{this.state.error}</li>
                             </ul>
                         </div>
                     </div>

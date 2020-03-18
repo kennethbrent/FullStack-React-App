@@ -70,7 +70,7 @@ class CourseDetail extends Component {
                                 <React.Fragment>
                                 <span>
                                     <NavLink className="button" to={`/courses/${this.state.course.id}/update`}>Update Course</NavLink>
-                                    <NavLink className="button" to={this.props.history} onClick={this.handleDeleteCourse}>Delete Course</NavLink>
+                                    <NavLink className="button" to='/' onClick={this.handleDeleteCourse}>Delete Course</NavLink>
                                 </span>
                                 <NavLink className="button button-secondary" to="/">Return to List</NavLink>
                                 </React.Fragment>

@@ -29,10 +29,21 @@ class UpdateCourse extends Component {
                 },
                 body: JSON.stringify(courseObject) // body data type must match "Content-Type" header
             })
-            .then(res => res.text()) // or res.json()
-            .then(data => window.location.href= `/courses/${this.state.course.id}`)
+            .then(res => {
+                if(!res.ok){
+                    res.text()
+                    .then(text => {throw Error(text)})
+                    .catch(err =>{
+                        this.setState({error: err.message})
+                    })
+                } else{
+                     window.location.href= `/courses/${this.state.course.id}`
+                }
+            }) // or res.json()
             .catch(error =>{
-                console.log(error)
+                this.setState({
+                    error: error.message
+                })
             })
         }
     }
@@ -61,11 +72,10 @@ class UpdateCourse extends Component {
                 <h1>Update Course</h1>
                 <div>
                     <div>
-                        <h2 className="validation--errors--label">Validatin errors</h2>
+                        <h2 className="validation--errors--label">Validation errors</h2>
                         <div className="validation-errors">
                             <ul>
-                                <li>Please provide a value for Tite</li>
-                                <li>Please provide a value for "Description"</li>
+                               <li>{this.state.error}</li>
                             </ul>
                         </div>
                     </div>

@@ -149,7 +149,7 @@ router.put('/courses/:id', authenticateUser, async (req, res, next)=> {
                 await course.update(req.body)
                 res.status(204).send()  
             } else {
-                res.status(400).json({Error: "Oh no! There was an error with your update. You can only update title, description, estimated time, or the materials needed. Please try again"})
+                res.status(400).send("Oh no! Both Title and Description are required. Please try again")
                 }
         } else{
             res.status(403).send('Not authorized');

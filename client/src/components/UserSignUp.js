@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import { NavLink } from 'react-router-dom';
 
 class UserSignUp extends Component {
+    state = {
+        error: null
+    }
     handleSubmit = (e) => {
         e.preventDefault();
         if(this.password.value === this.confirmPassword.value){
@@ -19,7 +22,13 @@ class UserSignUp extends Component {
                 body: JSON.stringify(userObject) // body data type must match "Content-Type" header
             })
             .then(res => {
-                if(res.status === 201) {
+                if(!res.ok){
+                    res.text()
+                    .then(text => {throw Error(text)})
+                    .catch(err =>{
+                        this.setState({error: err.message})
+                    })
+                } else if(res.status === 201){
                     this.props.handleSignIn(this.emailAddress.value, this.password.value)
                 }
             })
@@ -36,6 +45,11 @@ class UserSignUp extends Component {
             <div className="bounds">
                 <div className="grid-33 centered signin">
                     <h1>Sign Up<span className="error_message">err</span></h1>
+                    <div className="validation-errors">
+                    <ul>
+                       <li>{this.state.error}</li>
+                    </ul>
+                    </div>
                     <div>
                         <form onSubmit={this.handleSubmit}>
                             <div><input
