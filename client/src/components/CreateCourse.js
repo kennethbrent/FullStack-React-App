@@ -1,15 +1,18 @@
 import React, {Component} from 'react'
+import { NavLink } from 'react-router-dom';
 
 class CreateCourse extends Component {
 
     handleCreateCourse = (e) =>{
         e.preventDefault()
         const encodedCredentials = btoa(`${this.props.authenticatedUser.emailAddress}:${this.props.authenticatedUser.password}`);
-
         const courseObject = {
-            title: "test title",
-            description: "new test"
+            title: this.title.value,
+            description: this.description.value,
+            estimatedTime: this.estimatedTime.value,
+            materialsNeeded: this.materialsNeeded.value
         }
+     
      
         if(window.confirm("Are you sure you're ready to create this course?")){
             fetch(`http://localhost:5000/api/courses`, {
@@ -51,14 +54,28 @@ class CreateCourse extends Component {
                             <div className="course--header">
                                 <h4 className="course--label">Course</h4>
                                 <div>
-                                <input id="title" name="title" type="text" className="input-title course--title--input" placeholder="Course title..."
-                                  defaultValue=""/>
+                                <input 
+                                    id="title" 
+                                    name="title" 
+                                    type="text" 
+                                    className="input-title course--title--input" 
+                                    placeholder="Course title..."
+                                    defaultValue=""
+                                    ref={title=> this.title = title}
+                                    />
                                 </div>
                                 <p>By Authenticated User</p>
                             </div>
                             <div className="course--description">
                                 <div>
-                                    <textarea id="description" name="description" className="" placeholder="Course description..."></textarea>
+                                    <textarea
+                                         id="description" 
+                                         name="description" 
+                                         className="" 
+                                         placeholder="Course description..."
+                                         ref={description=> this.description = description}
+                                         >
+                                    </textarea>
                                 </div>
                             </div>
                         </div>
@@ -68,14 +85,28 @@ class CreateCourse extends Component {
                                     <li className="course-stats-list--item">
                                         <h4>Estimated Time</h4>
                                         <div>
-                                            <input id="estimatedTime" name="estimatedTime" type="text" className="course--time--input"
-                                            placeholder="Hours" defaultValue=""/>
+                                            <input 
+                                                id="estimatedTime" 
+                                                name="estimatedTime" 
+                                                type="text" 
+                                                className="course--time--input"
+                                                placeholder="Hours" 
+                                                defaultValue=""
+                                                ref={estimatedTime=> this.estimatedTime = estimatedTime}
+                                                />
                                         </div>
                                     </li>
                                     <li className="course--stats--list--item">
                                         <h4>Materials Needed</h4>
                                         <div>
-                                            <textarea id="materialsNeeded" name="materialsNeeded" className="" placeholder="List materials..."></textarea>
+                                            <textarea 
+                                                id="materialsNeeded" 
+                                                name="materialsNeeded" 
+                                                className="" 
+                                                placeholder="List materials..."
+                                                ref={materialsNeeded=> this.materialsNeeded= materialsNeeded}
+                                                >
+                                                </textarea>
                                         </div>
                                     </li>
                                 </ul>
@@ -83,7 +114,7 @@ class CreateCourse extends Component {
                         </div>
                         <div className="grid-100 pad-bottom">
                             <button className="button" type="submit">Create Course</button>
-                            <button className="button button-secondary"><a href="/">Cancel</a></button>
+                            <button className="button button-secondary" type="button"><NavLink to="/">Cancel</NavLink></button>
                         </div>
                     </form>
                 </div>

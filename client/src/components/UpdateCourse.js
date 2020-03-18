@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import { NavLink } from 'react-router-dom';
 
 class UpdateCourse extends Component {
 
@@ -135,7 +136,7 @@ class UpdateCourse extends Component {
                         </div>
                         <div className="grid-100 pad-bottom">
                             <button className="button" type="submit">Update Course</button>
-                            <button className="button button-secondary"><a href="/">Cancel</a></button>
+                            <button className="button button-secondary" type="button"><NavLink to="/">Cancel</NavLink></button>
                         </div>
                     </form>
                 </div>

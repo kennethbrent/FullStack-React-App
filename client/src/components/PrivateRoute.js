@@ -1,6 +1,5 @@
 import React  from 'react';
 import {Route, Redirect} from 'react-router-dom';
-import UserSignIn from './UserSignIn';
 
 const PrivateRoute =  ({ component: Component, ...props}) => {
     const {authenticatedUser} = props
@@ -24,7 +23,3 @@ const PrivateRoute =  ({ component: Component, ...props}) => {
 
 
 export default PrivateRoute 
-
-{/**
-            <Route path='/courses/:id/update' render={({match})=> <UpdateCourse match={match} authenticatedUser={this.state.authenticatedUser}/> } />
-*/}

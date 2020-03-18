@@ -1,10 +1,11 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
 const UserSignOut = (props) => {
     return(
         <nav>
             <span>Welcome {props.user.firstName} {props.user.lastName}</span>
-            <a className='signout' href="/" onClick={props.handleSignOut}>Sign out</a>
+            <NavLink className='signout' to="/" onClick={props.handleSignOut}>Sign out</NavLink>
         </nav>
     
     );

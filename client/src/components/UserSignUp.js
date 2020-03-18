@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { NavLink } from 'react-router-dom';
 
 class UserSignUp extends Component {
     handleSubmit = (e) => {
@@ -78,11 +79,11 @@ class UserSignUp extends Component {
                              </div>
                             <div className="grid-100 pad-bottom">
                                 <button className="button" type="submit">Sign Up</button>
-                                <button className="button button-secondary"><a href="/">Cancel</a></button>
+                                <button className="button button-secondary"><NavLink to="/">Cancel</NavLink></button>
                             </div>
                         </form>
 
-                        <p>Already have an account? <a href="/signin">Click here to sign in!</a></p>
+                        <p>Already have an account? <NavLink to="/signin">Click here to sign in!</NavLink></p>
                     </div>
                 </div>
             </div>

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import ReactMarkdown from 'react-markdown';
+import {NavLink} from 'react-router-dom';
 
 class CourseDetail extends Component {
     state = {
@@ -68,15 +69,15 @@ class CourseDetail extends Component {
                                 this.props.authenticatedUser.id === this.state.course.userId ?
                                 <React.Fragment>
                                 <span>
-                                    <a className="button" href={`/courses/${this.state.course.id}/update`}>Update Course</a>
-                                    <a className="button" href={this.props.history} onClick={this.handleDeleteCourse}>Delete Course</a>
+                                    <NavLink className="button" to={`/courses/${this.state.course.id}/update`}>Update Course</NavLink>
+                                    <NavLink className="button" to={this.props.history} onClick={this.handleDeleteCourse}>Delete Course</NavLink>
                                 </span>
-                                <a className="button button-secondary" href="/">Return to List</a>
+                                <NavLink className="button button-secondary" to="/">Return to List</NavLink>
                                 </React.Fragment>
                                 : 
-                                <a className="button button-secondary" href="/">Return to List</a>
+                                <NavLink className="button button-secondary" to="/">Return to List</NavLink>
                             :
-                            <a className="button button-secondary" href="/">Return to List</a>
+                            <NavLink className="button button-secondary" to="/">Return to List</NavLink>
                             }
                         </div>
                     </div>
