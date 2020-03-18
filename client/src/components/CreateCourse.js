@@ -4,12 +4,29 @@ class CreateCourse extends Component {
 
     handleCreateCourse = (e) =>{
         e.preventDefault()
+        const encodedCredentials = btoa(`${this.props.authenticatedUser.emailAddress}:${this.props.authenticatedUser.password}`);
+
+        const courseObject = {
+            title: "test title",
+            description: "new test"
+        }
+     
         if(window.confirm("Are you sure you're ready to create this course?")){
             fetch(`http://localhost:5000/api/courses`, {
-                method: 'POST'
+                method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                mode: 'cors', // no-cors, *cors, same-origin
+                headers: {
+                  'Content-Type': 'application/json',
+                  "Authorization": `Basic ${encodedCredentials}`,
+                  "Access-Control-Expose-Headers": Location
+                  // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: JSON.stringify(courseObject) // body data type must match "Content-Type" header
             })
-            .then(res => res.text()) // or res.json()
-            .then(res => console.log(res))
+            .then(res => {
+                const location = res.headers.get('Location')
+                window.location.href = `${location}`
+            }) // or res.json()
             .catch(error =>{
                 console.log(error)
             })

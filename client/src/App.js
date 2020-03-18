@@ -8,39 +8,40 @@ import UserSignIn from './components/UserSignIn';
 import UserSignUp from './components/UserSignUp';
 import CreateCourse from './components/CreateCourse';
 import UpdateCourse from './components/UpdateCourse';
+import PrivateRoute from './components/PrivateRoute';
 import Cookies from 'js-cookie';
 
 class App extends Component {
   state={
-    authenticatedUser: Cookies.getJSON('authenticatedUser') || null
+    authenticatedUser: Cookies.getJSON('authenticatedUser')|| null
   }
 
-  handleSignIn = (username,password) =>{
-      const encodedCredentials = btoa(`${username}:${password}`);
+  handleSignIn = (emailAddress,password) =>{
+      const encodedCredentials = btoa(`${emailAddress}:${password}`);
         const auth = new Headers({
-            "Authorization": `Basic ${encodedCredentials}`
+            "Authorization": `Basic ${encodedCredentials}`,
           });
         const optionsObj = {  
             method: 'GET',
-            headers: auth
+            headers: auth,
           }
         fetch('http://localhost:5000/api/users', optionsObj)
             .then(res => {
               if(res.status === 200){
-                Cookies.set('authenticatedUser', JSON.stringify(btoa(username)), {expires: 1})
                 return res.json()
               }
             }) 
             .then(data => {
-              const cookie = Cookies.getJSON('authenticatedUser');
-              if(cookie){
+              if(data) {
+                data.user.password = password
                 this.setState({
-                  authenticatedUser: cookie,
+                  authenticatedUser: data.user
                 })
+                Cookies.set('authenticatedUser', JSON.stringify(data.user) ,{expires: 1})
+                window.location.href="/courses"
               }
-              return data.user.firstName
             })
-            .catch(error =>{
+            .catch((error) =>{
                 console.log(error)
             })
     }
@@ -53,20 +54,19 @@ class App extends Component {
 
 
 
-
   render(){
     return (
       <BrowserRouter>
         <div className="container">
-        <Header authenticatedUser={this.state.authenticatedUser} handleSignOut={this.handleSignOut} user="me"/>
+        <Header user={this.state.authenticatedUser} handleSignOut={this.handleSignOut}/>
           <Switch>
             <Redirect exact from='/' to='/courses'/> 
             <Route exact path='/courses' render={()=> <Courses/>}/>
-            <Route exact path='/courses/create' render={()=> <CreateCourse />}/>
-            <Route path='/courses/:id/update' render={({match})=> <UpdateCourse match={match}/> } />
-            <Route path='/courses/:id' render={({match})=> <CourseDetail match={match}/> } />
+            <PrivateRoute authenticatedUser={this.state.authenticatedUser} path="/courses/create" component={CreateCourse} />
+            <PrivateRoute authenticatedUser={this.state.authenticatedUser} path='/courses/:id/update' component={UpdateCourse}/>
+            <Route path='/courses/:id' render={({match})=> <CourseDetail match={match} authenticatedUser={this.state.authenticatedUser}/> } />
             <Route path='/signin' render={()=> <UserSignIn handleSignIn={this.handleSignIn} />}/>
-            <Route path='/signup' render={()=> <UserSignUp />}/>
+            <Route path='/signup' render={()=> <UserSignUp handleSignIn={this.handleSignIn} />}/>
             <Redirect exact from='/signout' to="courses" />
             {/**
             <Route exact path='/search/atlanta' render={()=> <PhotoContainer state={this.state} photos={this.state.atlanta}/>}/>

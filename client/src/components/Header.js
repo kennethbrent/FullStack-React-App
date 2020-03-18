@@ -6,7 +6,7 @@ const Header = (props) => {
         <div className="header">
             <div className="bounds">
                 <h1 className="header--logo"><a href="/">Courses</a></h1>
-                {!props.authenticatedUser ?
+                {!props.user ?
                     <nav>
                         <a className='signup' href="/signup">Sign up</a>
                         <a className="signin" href="/signin">Sign in</a>

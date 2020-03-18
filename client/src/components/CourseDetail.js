@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import ReactMarkdown from 'react-markdown';
 
 class CourseDetail extends Component {
     state = {
@@ -8,13 +9,20 @@ class CourseDetail extends Component {
         materials: []
     }
 
-    handleDeleteCourse = () => {
+    handleDeleteCourse = (e) => {
+        e.preventDefault()
+        const encodedCredentials = btoa(`${this.props.authenticatedUser.emailAddress}:${this.props.authenticatedUser.password}`);
         if(window.confirm('Are you sure you want to delete this course?')){
             fetch(`http://localhost:5000/api/courses/${this.state.course.id}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                mode: 'cors', // no-cors, *cors, same-origin
+                headers: {
+                  'Content-Type': 'application/json',
+                  "Authorization": `Basic ${encodedCredentials}`
+                  // 'Content-Type': 'application/x-www-form-urlencoded',
+                }
             })
-            .then(res => res.text()) // or res.json()
-            .then(res => console.log(res))
+            .then(res => window.location.href='/courses') // or res.json()
             .catch(error =>{
                 console.log(error)
             })
@@ -55,11 +63,21 @@ class CourseDetail extends Component {
                 <div className="actions--bar">
                     <div className="bounds">
                         <div className="grid-100">
-                            <span>
-                                <a className="button" href={`/courses/${this.state.course.id}/update`}>Update Course</a>
-                                <a className="button" href={this.props.history} onClick={this.handleDeleteCourse}>Delete Course</a>
-                            </span>
+                        
+                        {this.props.authenticatedUser ?
+                                this.props.authenticatedUser.id === this.state.course.userId ?
+                                <React.Fragment>
+                                <span>
+                                    <a className="button" href={`/courses/${this.state.course.id}/update`}>Update Course</a>
+                                    <a className="button" href={this.props.history} onClick={this.handleDeleteCourse}>Delete Course</a>
+                                </span>
+                                <a className="button button-secondary" href="/">Return to List</a>
+                                </React.Fragment>
+                                : 
+                                <a className="button button-secondary" href="/">Return to List</a>
+                            :
                             <a className="button button-secondary" href="/">Return to List</a>
+                            }
                         </div>
                     </div>
                 </div>
@@ -72,7 +90,9 @@ class CourseDetail extends Component {
                         </div>
 
                         <div className="course--description">
-                            <p>{this.state.course.description}</p>
+                            <ReactMarkdown>
+                                {this.state.course.description}
+                            </ReactMarkdown>
                         </div>
                     </div>
                 <div className="grid-25 grid-right">
@@ -85,15 +105,10 @@ class CourseDetail extends Component {
                     <li className="course--stats--list--item">
                     <h4>Materials Needed</h4>
                     <ul>
-                    {this.state.isLoading ? <p>k</p>:
-                        <React.Fragment>
-                        {this.state.materials.map((item,index)=>{
-                            return(
-                                <li key={index}>{item}</li>
-                            );
-                        })}
-                        </React.Fragment>
-                    }
+                    <ReactMarkdown>
+                            {this.state.course.materialsNeeded}
+                    </ReactMarkdown>
+
                     </ul>
                     </li>
                 </ul>
