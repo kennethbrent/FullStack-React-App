@@ -1,10 +1,11 @@
 import React, {Component} from 'react'
-import { NavLink } from 'react-router-dom';
+import { NavLink, Redirect } from 'react-router-dom';
 
 class UpdateCourse extends Component {
 
     state={
-        course: []
+        course: [],
+        isLoading: true
     }
 
     handleUpdateCourse = (e) =>{
@@ -56,7 +57,7 @@ class UpdateCourse extends Component {
             .then((result) => {
                 this.setState({
                     course: result,
-                    author: result.User.firstName + " " + result.User.lastName
+                    isLoading: false
                 })
             })
             .catch((error)=>{
@@ -68,17 +69,30 @@ class UpdateCourse extends Component {
     }
     render(){
         return(
+            <React.Fragment>
+            {this.state.isLoading ? 
+                null
+                :
+                this.state.course.userId  ?
+                    this.state.course.userId !== this.props.authenticatedUser.id ?
+                        <Redirect to="/forbidden"/>
+                    :
+
             <div className="bounds course--detail">
                 <h1>Update Course</h1>
                 <div>
-                    <div>
+                {this.state.error ?
+                    <div className="validation_error_container">
                         <h2 className="validation--errors--label">Validation errors</h2>
                         <div className="validation-errors">
                             <ul>
-                               <li>{this.state.error}</li>
+                                    <li>{this.state.error}</li>
                             </ul>
                         </div>
                     </div>
+                    :
+                    null
+                    }
                     <form onSubmit={this.handleUpdateCourse}>
                         <div className="grid-66">
                             <div className="course--header">
@@ -151,6 +165,11 @@ class UpdateCourse extends Component {
                     </form>
                 </div>
             </div>
+            :
+            <Redirect to="/notfound"/>
+
+        } 
+        </React.Fragment>
         );
     }
 }

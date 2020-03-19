@@ -50,7 +50,8 @@ class CreateCourse extends Component {
             <div className="bounds course--detail">
                 <h1>Create Course</h1>
                 <div>
-                    <div>
+                    {this.state.error ?
+                    <div className="validation_error_container">
                         <h2 className="validation--errors--label">Validation errors</h2>
                         <div className="validation-errors">
                             <ul>
@@ -58,6 +59,10 @@ class CreateCourse extends Component {
                             </ul>
                         </div>
                     </div>
+                    :
+                    null
+                    }
+
                     <form onSubmit={this.handleCreateCourse}>
                         <div className="grid-66">
                             <div className="course--header">

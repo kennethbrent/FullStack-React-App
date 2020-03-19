@@ -3,8 +3,14 @@ import {NavLink} from 'react-router-dom';
 class UserSignIn extends Component {
 
     handleSubmit =(e) => {
-        e.preventDefault()    
-        this.props.handleSignIn(this.username.value,this.password.value)
+        e.preventDefault()
+        let location;
+        if(this.props.location){
+            location = this.props.location.from.pathname
+        } else {
+            location = '/courses'
+        }
+        this.props.handleSignIn(this.username.value,this.password.value, location, this.props.history)
     }
 
     render(){

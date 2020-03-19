@@ -9,6 +9,9 @@ import UserSignUp from './components/UserSignUp';
 import CreateCourse from './components/CreateCourse';
 import UpdateCourse from './components/UpdateCourse';
 import PrivateRoute from './components/PrivateRoute';
+import NotFound from './components/NotFound';
+import Forbidden from './components/Forbidden';
+import Error from './components/Error'
 import Cookies from 'js-cookie';
 
 class App extends Component {
@@ -16,7 +19,8 @@ class App extends Component {
     authenticatedUser: Cookies.getJSON('authenticatedUser')|| null
   }
 
-  handleSignIn = (emailAddress,password) =>{
+
+  handleSignIn = (emailAddress,password , location, history) =>{
       const encodedCredentials = btoa(`${emailAddress}:${password}`);
         const auth = new Headers({
             "Authorization": `Basic ${encodedCredentials}`,
@@ -30,6 +34,9 @@ class App extends Component {
               if(res.status === 200){
                 return res.json()
               }
+              else {
+                console.log(res.status)
+              }
             }) 
             .then(data => {
               if(data) {
@@ -37,8 +44,8 @@ class App extends Component {
                 this.setState({
                   authenticatedUser: data.user
                 })
-                Cookies.set('authenticatedUser', JSON.stringify(data.user) ,{expires: 1})
-                window.location.href="/courses"
+                Cookies.set('authenticatedUser', JSON.stringify(data.user) ,{expires: 1});
+                history.push(location)
               }
             })
             .catch((error) =>{
@@ -65,17 +72,13 @@ class App extends Component {
             <PrivateRoute authenticatedUser={this.state.authenticatedUser} path="/courses/create" component={CreateCourse} />
             <PrivateRoute authenticatedUser={this.state.authenticatedUser} path='/courses/:id/update' component={UpdateCourse}/>
             <Route path='/courses/:id' render={({match})=> <CourseDetail match={match} authenticatedUser={this.state.authenticatedUser}/> } />
-            <Route path='/signin' render={()=> <UserSignIn handleSignIn={this.handleSignIn} />}/>
+            <Route path='/signin' render={({location , history})=> <UserSignIn handleSignIn={this.handleSignIn}  location={location.state} history={history}/>}/>
             <Route path='/signup' render={()=> <UserSignUp handleSignIn={this.handleSignIn} />}/>
             <Redirect exact from='/signout' to="courses" />
-            {/**
-            <Route exact path='/search/atlanta' render={()=> <PhotoContainer state={this.state} photos={this.state.atlanta}/>}/>
-            <Route exact path='/search/golf' render={()=> <PhotoContainer state={this.state} photos={this.state.golf}/>}/>
-            <Route exact path='/search/coding' render={()=> <PhotoContainer state={this.state} photos={this.state.coding}/>}/>
-            <Route path='/search/:searchterm' render={({match})=> <PhotoContainer state={this.state} photos={this.state.photos} match={match} handleSearch={this.handleSearch}/>}/>
+            <Route path='/notfound' component={NotFound}/>
+            <Route path='/forbidden' component={Forbidden} />
+            <Route path="/error" component={Error} />
             <Route component={NotFound} />
-            */}
-
           </Switch>
         </div>
       </BrowserRouter>

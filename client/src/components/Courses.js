@@ -15,8 +15,6 @@ class Courses extends Component {
                 this.setState({
                     courses: result,
                     isLoading: false
-                }, ()=>{
-                    console.log(this.state)
                 })
             })
             .catch((error)=>{
