@@ -749,6 +749,7 @@ input:focus {
   display: table;
   border-radius: 3px;
   padding: 10px;
+  margin-bottom: 1em;
 }
 .validation--errors--label {
   font-size: 28px;

@@ -48,7 +48,8 @@ class CourseDetail extends Component {
                 })
             })
             .catch((error)=>{
-                console.log(error)
+                console.log(error);
+                return(   <Redirect to="/error" />)
             })
         }
     }

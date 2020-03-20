@@ -61,7 +61,8 @@ class UpdateCourse extends Component {
                 })
             })
             .catch((error)=>{
-                console.log(error)
+                console.log(error);
+                return(   <Redirect to="/error" />)
             })
         }
      

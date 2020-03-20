@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {NavLink} from 'react-router-dom';
+import {NavLink, Redirect} from 'react-router-dom';
 
 class Courses extends Component {
     
@@ -18,7 +18,8 @@ class Courses extends Component {
                 })
             })
             .catch((error)=>{
-                console.log(error)
+                console.log(error);
+                return(   <Redirect to="/error" />)
             })      
     }
 

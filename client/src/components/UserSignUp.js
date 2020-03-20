@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Redirect } from 'react-router-dom';
 
 class UserSignUp extends Component {
     state = {
@@ -34,6 +34,10 @@ class UserSignUp extends Component {
             })
             .catch(err =>{
                 console.log(err.msg)
+                if (err.status === 500) {
+                    console.log(err);
+                    return(   <Redirect to="/error" />)
+                }
             })
         } else {
             alert('Passwords must match')
@@ -44,12 +48,19 @@ class UserSignUp extends Component {
         return(
             <div className="bounds">
                 <div className="grid-33 centered signin">
-                    <h1>Sign Up<span className="error_message">err</span></h1>
-                    <div className="validation-errors">
-                    <ul>
-                       <li>{this.state.error}</li>
-                    </ul>
-                    </div>
+                    <h1>Signer Upper</h1>
+                    {this.state.error ?
+                        <div className="validation_error_container">
+                            <h2 className="validation--errors--label">Validation errors</h2>
+                            <div className="validation-errors">
+                                <ul>
+                                        <li>{this.state.error}</li>
+                                </ul>
+                            </div>
+                        </div>
+                        :
+                        null
+                        }
                     <div>
                         <form onSubmit={this.handleSubmit}>
                             <div><input
