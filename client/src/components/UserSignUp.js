@@ -1,10 +1,14 @@
 import React, {Component} from 'react';
-import { NavLink, Redirect } from 'react-router-dom';
+import { NavLink} from 'react-router-dom';
 
 class UserSignUp extends Component {
     state = {
         error: null
     }
+    ////submits form to create new users
+    ///set new user values to the input values
+    //signs new user in and calls handleSign in if the new user was successfully created
+    
     handleSubmit = (e) => {
         e.preventDefault();
         if(this.password.value === this.confirmPassword.value){
@@ -34,10 +38,7 @@ class UserSignUp extends Component {
             })
             .catch(err =>{
                 console.log(err.msg)
-                if (err.status === 500) {
-                    console.log(err);
-                    return(   <Redirect to="/error" />)
-                }
+                this.props.history.push('/error')
             })
         } else {
             alert('Passwords must match')

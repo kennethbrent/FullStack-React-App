@@ -1,10 +1,13 @@
 import React, {Component} from 'react'
-import { NavLink, Redirect } from 'react-router-dom';
+import { NavLink} from 'react-router-dom';
 
 class CreateCourse extends Component {
     state = {
         error: null
     }
+    ///Create a new course based on input ref values
+    //Returns validation errors and renders them if necessary
+    //Redirects to location header that is returned from api or error route/component 
     handleCreateCourse = (e) =>{
         e.preventDefault()
         const encodedCredentials = btoa(`${this.props.authenticatedUser.emailAddress}:${this.props.authenticatedUser.password}`);
@@ -18,15 +21,15 @@ class CreateCourse extends Component {
      
         if(window.confirm("Are you sure you're ready to create this course?")){
             fetch(`http://localhost:5000/api/courses`, {
-                method: 'POST', // *GET, POST, PUT, DELETE, etc.
-                mode: 'cors', // no-cors, *cors, same-origin
+                method: 'POST',
+                mode: 'cors', 
                 headers: {
                   'Content-Type': 'application/json',
                   "Authorization": `Basic ${encodedCredentials}`,
                   "Access-Control-Expose-Headers": Location
-                  // 'Content-Type': 'application/x-www-form-urlencoded',
+        
                 },
-                body: JSON.stringify(courseObject) // body data type must match "Content-Type" header
+                body: JSON.stringify(courseObject) 
             })
             .then(res => {
                 if(!res.ok){
@@ -37,12 +40,12 @@ class CreateCourse extends Component {
                     })
                 } else{
                     const location = res.headers.get('Location')
-                    window.location.href = `${location}`
+                    this.props.history.push(location)
                 }
             })
             .catch(error =>{
                 console.log(error);
-                return(   <Redirect to="/error" />)
+                this.props.history.push('/error')
             })
         }
     }

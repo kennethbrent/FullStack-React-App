@@ -14,11 +14,6 @@ const Header = (props) => {
                     </nav>:
                     <UserSignOut handleSignOut={props.handleSignOut} user={props.user}/>
                 }
-               
-                {/**
-                  
-                */}
-      
             </div>
         </div>
     );

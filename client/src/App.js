@@ -1,7 +1,13 @@
+//Modules
 import React, {Component} from 'react';
-import Courses from './components/Courses'
 import {BrowserRouter, Route, Switch, Redirect} from  'react-router-dom';
+import Cookies from 'js-cookie';
+
+//styles
 import './App.css';
+
+////components
+import Courses from './components/Courses'
 import Header from './components/Header';
 import CourseDetail from './components/CourseDetail';
 import UserSignIn from './components/UserSignIn';
@@ -12,14 +18,14 @@ import PrivateRoute from './components/PrivateRoute';
 import NotFound from './components/NotFound';
 import Forbidden from './components/Forbidden';
 import Error from './components/Error'
-import Cookies from 'js-cookie';
+
 
 class App extends Component {
   state={
     authenticatedUser: Cookies.getJSON('authenticatedUser')|| null
   }
 
-
+  ////sign in callback passed down through props to UserSignUp and UserSignIn components
   handleSignIn = (emailAddress,password , location, history) =>{
       const encodedCredentials = btoa(`${emailAddress}:${password}`);
         const auth = new Headers({
@@ -71,9 +77,9 @@ class App extends Component {
             <Route exact path='/courses' render={()=> <Courses/>}/>
             <PrivateRoute authenticatedUser={this.state.authenticatedUser} path="/courses/create" component={CreateCourse} />
             <PrivateRoute authenticatedUser={this.state.authenticatedUser} path='/courses/:id/update' component={UpdateCourse}/>
-            <Route path='/courses/:id' render={({match})=> <CourseDetail match={match} authenticatedUser={this.state.authenticatedUser}/> } />
+            <Route path='/courses/:id' render={({match, history})=> <CourseDetail match={(match)} authenticatedUser={this.state.authenticatedUser} history={history}/> } />
             <Route path='/signin' render={({location , history})=> <UserSignIn handleSignIn={this.handleSignIn}  location={location.state} history={history}/>}/>
-            <Route path='/signup' render={()=> <UserSignUp handleSignIn={this.handleSignIn} />}/>
+            <Route path='/signup' render={({history})=> <UserSignUp handleSignIn={this.handleSignIn} history={history} />}/>
             <Redirect exact from='/signout' to="courses" />
             <Route path='/notfound' component={NotFound}/>
             <Route path='/forbidden' component={Forbidden} />

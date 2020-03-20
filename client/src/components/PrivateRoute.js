@@ -7,7 +7,7 @@ const PrivateRoute =  ({ component: Component, ...props}) => {
         return(
             <Route
             {...props}
-            render={({match}) => <Component match={match} authenticatedUser={authenticatedUser}/>}
+            render={({history, match}) => <Component match={match} authenticatedUser={authenticatedUser} history={history}/>}
         />
         )
     }

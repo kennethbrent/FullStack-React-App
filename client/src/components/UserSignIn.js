@@ -2,6 +2,11 @@ import React, {Component} from 'react';
 import {NavLink} from 'react-router-dom';
 class UserSignIn extends Component {
 
+    //////////////////////////////////////////
+    //calls the handleSignIn function passed down through props
+    // and passes params of username and password from the input values
+    //location is set and history object is passed back to the app component so it's accessible globally
+    //and the sign in object can manipulate or 'push' to history
     handleSubmit =(e) => {
         e.preventDefault()
         let location;

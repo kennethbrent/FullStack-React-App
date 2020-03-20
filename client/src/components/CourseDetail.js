@@ -8,22 +8,26 @@ class CourseDetail extends Component {
         materials: []
     }
 
+    /////delete course uses 
+
     handleDeleteCourse = (e) => {
         e.preventDefault()
         const encodedCredentials = btoa(`${this.props.authenticatedUser.emailAddress}:${this.props.authenticatedUser.password}`);
         if(window.confirm('Are you sure you want to delete this course?')){
             fetch(`http://localhost:5000/api/courses/${this.state.course.id}`, {
                 method: 'DELETE',
-                mode: 'cors', // no-cors, *cors, same-origin
+                mode: 'cors', 
                 headers: {
                   'Content-Type': 'application/json',
                   "Authorization": `Basic ${encodedCredentials}`
-                  // 'Content-Type': 'application/x-www-form-urlencoded',
                 }
             })
-            .then(res => window.location.href='/courses') // or res.json()
+            .then(res => this.props.history.push('/courses')) // or res.json()
             .catch(error =>{
                 console.log(error)
+                return(
+                    this.props.history.push('/error')
+                )
             })
         }
     }
@@ -31,6 +35,7 @@ class CourseDetail extends Component {
 
 
     componentDidMount(){
+        ////fetch course data if there is param value
         if(this.props.match){
             const {match} = this.props;
             fetch(`http://localhost:5000/api/courses/${match.params.id}`)
@@ -39,12 +44,6 @@ class CourseDetail extends Component {
                 this.setState({
                     course: result,
                     isLoading: false
-                }, ()=>{
-                    if(this.state.course.materialsNeeded){
-                        this.setState({
-                            materials: result.materialsNeeded.split('* ')
-                        })
-                    }
                 })
             })
             .catch((error)=>{
